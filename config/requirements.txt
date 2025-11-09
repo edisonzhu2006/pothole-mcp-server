@@ -1,6 +1,7 @@
 # Core dependencies for MCP server
 mcp
 python-dotenv
+supabase
 
 # For AI-powered Q&A functionality
 openai
