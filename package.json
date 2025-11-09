@@ -1,0 +1,51 @@
+{
+  "name": "@edisonzhu2006/pothole-mcp-server",
+  "version": "0.1.0",
+  "description": "A Model Context Protocol server for hazard detection and queries",
+  "private": false,
+  "type": "module",
+  "bin": {
+    "pothole-mcp-server": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('dist/index.js', '755')\"",
+    "start": "node dist/index.js --port 3002",
+    "dev:stdio": "tsx src/index.ts",
+    "dev:shttp": "tsx src/index.ts --port 3002",
+    "prepare": "bun run build",
+    "watch": "tsc --watch",
+    "inspector": "npx @modelcontextprotocol/inspector dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edisonzhu2006/pothole-mcp-server.git"
+  },
+  "keywords": [
+    "mcp",
+    "pothole-detection",
+    "hazard-detection"
+  ],
+  "author": {
+    "name": "Edison Zhu",
+    "url": "https://windsornguyen.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edisonzhu2006/pothole-mcp-server/issues"
+  },
+  "homepage": "https://github.com/edisonzhu2006/pothole-mcp-server#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.16.0",
+    "@supabase/supabase-js": "^2.80.0",
+    "dotenv": "^17.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "supabase": "^1.16.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  }
+}

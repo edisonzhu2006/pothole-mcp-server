@@ -1,89 +1,34 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
+# Dependencies
+node_modules/
+.npm
+
+# Build
 build/
-develop-eggs/
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+coverage/
 
-# Virtual environments
-venv/
-ENV/
-env/
-.venv/
-.env/
-
-# UV package manager
-uv.lock
-.uv/
+# Environment
+.env
+.env.local
+.env.*.local
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
-.DS_Store
 
-# Environment variables
-.env
-.env.local
-.env.*.local
+# LLMs
+**/.claude/
 
-# Testing
-.coverage
-.pytest_cache/
-.tox/
-.nox/
-.hypothesis/
-*.cover
+# Logs
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+server.log
 
-# Documentation build
-docs/_build/
-site/
-
-# Cache
-*.cache
-.cache/
-embeddings_cache/
-metadata_cache/
-
-# Temporary files
-*.tmp
-*.bak
-tmp/
-temp/
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Model files
-*.pkl
-*.h5
-*.pt
-*.pth
-*.onnx
-
-# Vector stores
-faiss_index/
-chroma_db/
-qdrant_data/
+# OS
+.DS_Store
+Thumbs.db
