@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime, timezone
 from typing import Optional, Dict, Any, List
+from collections import Counter
+from collections import Counter
 
 # env
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,28 +62,60 @@ def weather_mult(precip_mm:float=0.0, ft:int=0): return 1.0 + min(0.5,precip_mm/
 
 # ------------------ TOOL 1: analytics ------------------
 @mcp.tool()
-def query_hazards(kind: str, location: Optional[str] = None, limit: int = 10) -> Dict[str,Any]:
+def query_hazards(kind: str, location: Optional[str] = None, limit: int = 10) -> Dict[str, Any]:
     """
     Answer analytics over hazards.
-    kinds: area_with_most_hazards | top_severe_in_area | counts_by_type | open_vs_resolved
-    Uses `location` as the area field from your table.
+    - `area_with_most_hazards`: returns top X locations with most hazards. Use `limit` for X. Use `location` to filter by a region (e.g., a city or state).
+    - `top_severe_in_area`: returns top severe hazards for an exact `location`.
+    - `counts_by_type`: returns hazard counts by type. Can be filtered by `location`.
+    - `open_vs_resolved`: returns open vs resolved counts. Can be filtered by `location`.
     """
     k = (kind or "").lower()
     if k == "area_with_most_hazards":
-        rows = (sb.table("hazards").select("location, count:id").group("location").order("count", desc=True).limit(1).execute().data)
-        return {"question": k, "result": rows}
+        query = sb.table("hazards").select("location")
+        if location:
+            query = query.ilike("location", f"%{location}%")
+        all_hazards = query.execute().data
+        if not all_hazards:
+            return {"question": k, "result": []}
+        location_counts = Counter(h["location"] for h in all_hazards if h.get("location"))
+        most_common = location_counts.most_common(limit)
+        rows = [{"location": loc, "count": count} for loc, count in most_common]
+        return {"question": k, "location_filter": location, "result": rows}
     if k == "top_severe_in_area":
-        if not location: raise ValueError("location is required")
-        rows = (sb.table("hazards").select("*").eq("location", location).order("severity", desc=True).order("created_at", desc=True).limit(limit).execute().data)
+        if not location:
+            raise ValueError("location is required")
+        rows = (
+            sb.table("hazards")
+            .select("*")
+            .eq("location", location)
+            .order("severity", desc=True)
+            .order("created_at", desc=True)
+            .limit(limit)
+            .execute()
+            .data
+        )
         return {"question": k, "location": location, "result": rows}
     if k == "counts_by_type":
-        q = sb.table("hazards").select("hazard_type, count:id").group("hazard_type"); 
-        if location: q=q.eq("location", location)
-        return {"question": k, "location": location, "result": q.execute().data}
+        q = sb.table("hazards").select("hazard_type")
+        if location:
+            q = q.eq("location", location)
+        all_hazards = q.execute().data
+        if not all_hazards:
+            return {"question": k, "location": location, "result": []}
+        type_counts = Counter(h["hazard_type"] for h in all_hazards if h.get("hazard_type"))
+        rows = [{"hazard_type": t, "count": c} for t, c in type_counts.items()]
+        return {"question": k, "location": location, "result": rows}
     if k == "open_vs_resolved":
-        q = sb.table("hazards").select("status, count:id").group("status"); 
-        if location: q=q.eq("location", location)
-        return {"question": k, "location": location, "result": q.execute().data}
+        q = sb.table("hazards").select("status")
+        if location:
+            q = q.eq("location", location)
+        all_hazards = q.execute().data
+        if not all_hazards:
+            return {"question": k, "location": location, "result": []}
+        status_counts = Counter(h["status"] for h in all_hazards if h.get("status"))
+        rows = [{"status": s, "count": c} for s, c in status_counts.items()]
+        return {"question": k, "location": location, "result": rows}
     raise ValueError("Unknown kind")
 
 # ------------------ TOOL 2: repair plan ----------------
