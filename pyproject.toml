@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "MCP server for hazards analytics and projections"
 requires-python = ">=3.10"
 dependencies = [
-  "openmcp",
+  "mcp",
   "supabase>=2.6.0",
   "python-dotenv",
   "openai"
@@ -18,4 +18,4 @@ build-backend = "setuptools.build_meta"
 packages = ["src"]
 
 [project.scripts]
-hazard-mcp = "src.main:main"
+main = "src.main:main"
