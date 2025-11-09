@@ -1,70 +1,73 @@
 {
-  "name": "road-insights-mcp",
+  "name": "hazard-mcp",
   "version": "0.1.0",
-  "description": "MCP tool server for road hazard intelligence (Supabase, YOLO, Street View, costs).",
-  "entrypoint": "src/server.py",
+  "description": "MCP server for hazards analytics/repair/projections",
+  "entrypoint": "src/main.py",
   "tools": [
     {
-      "name": "get_recent_hazards",
-      "description": "Fetch latest hazards from Supabase with optional filters.",
-      "input_schema": { "$ref": "src/schemas/hazard_query.schema.json" },
-      "output_schema": {
-        "type": "object",
-        "properties": { "items": { "type": "array" } },
-        "required": ["items"]
-      }
-    },
-    {
-      "name": "estimate_repair_cost",
-      "description": "Estimate cost by hazard type, severity, dimensions, and surface.",
-      "input_schema": { "$ref": "src/schemas/cost_estimate.schema.json" },
-      "output_schema": {
-        "type": "object",
-        "properties": {
-          "cost_usd": { "type": "number" },
-          "breakdown": { "type": "object" }
-        },
-        "required": ["cost_usd"]
-      }
-    },
-    {
-      "name": "project_severity",
-      "description": "Predict worsening using env + traffic features.",
-      "input_schema": { "$ref": "src/schemas/severity_projection.schema.json" },
-      "output_schema": {
-        "type": "object",
-        "properties": { "projection": { "type": "string" } },
-        "required": ["projection"]
-      }
-    },
-    {
-      "name": "repair_suggestions",
-      "description": "Return concise fix methods and materials + safety notes.",
-      "input_schema": { "$ref": "src/schemas/repair_lookup.schema.json" },
-      "output_schema": {
-        "type": "object",
-        "properties": { "methods": { "type": "array" } },
-        "required": ["methods"]
-      }
-    },
-    {
-      "name": "explain_map",
-      "description": "Explain clusters, hotspots, trends, and recommended actions for ops.",
+      "name": "query_hazards",
+      "description": "Answer analytics over hazards.\n    kinds: area_with_most_hazards | top_severe_in_area | counts_by_type | open_vs_resolved\n    Uses `location` as the area field from your table.",
       "input_schema": {
         "type": "object",
         "properties": {
-          "area": { "type": "string" },
-          "time_window_days": { "type": "integer" }
+          "kind": {
+            "type": "string",
+            "description": "The type of query to run."
+          },
+          "location": {
+            "type": "string",
+            "description": "The location to filter by."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 10
+          }
         },
-        "required": ["area"]
-      },
-      "output_schema": {
+        "required": [
+          "kind"
+        ]
+      }
+    },
+    {
+      "name": "estimate_repair_plan",
+      "description": "Return a type-aware cost estimate and fully detailed plan for a hazard UUID.",
+      "input_schema": {
         "type": "object",
         "properties": {
-          "summary": { "type": "string" },
-          "highlights": { "type": "array" }
+          "hazard_id": {
+            "type": "string"
+          }
         },
-        "required": ["summary"]
+        "required": [
+          "hazard_id"
+        ]
+      }
+    },
+    {
+      "name": "project_worsening",
+      "description": "Project severity into the future for a hazard ID or a whole location.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "hazard_id": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "horizon_days": {
+            "type": "integer",
+            "default": 30
+          },
+          "precip_mm": {
+            "type": "number",
+            "default": 0.0
+          },
+          "freeze_thaw_cycles": {
+            "type": "integer",
+            "default": 0
+          }
+        }
       }
     }
   ]

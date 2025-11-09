@@ -130,3 +130,6 @@ def project_worsening(hazard_id: Optional[str] = None, location: Optional[str] =
             "inputs":{"weather_multiplier":round(w,3),"freeze_thaw_cycles":freeze_thaw_cycles,"precip_mm":precip_mm},
             "summary":{"hazard_count":len(rows),"avg_severity_now":round(now_sum/n,2),"avg_severity_projected":round(proj_sum/n,2),"urgent_>=7_count":urgent},
             "samples":samples}
+
+def main():
+    mcp.run()
