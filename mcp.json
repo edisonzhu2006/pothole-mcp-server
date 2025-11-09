@@ -1,0 +1,71 @@
+{
+  "name": "road-insights-mcp",
+  "version": "0.1.0",
+  "description": "MCP tool server for road hazard intelligence (Supabase, YOLO, Street View, costs).",
+  "entrypoint": "src/server.py",
+  "tools": [
+    {
+      "name": "get_recent_hazards",
+      "description": "Fetch latest hazards from Supabase with optional filters.",
+      "input_schema": { "$ref": "src/schemas/hazard_query.schema.json" },
+      "output_schema": {
+        "type": "object",
+        "properties": { "items": { "type": "array" } },
+        "required": ["items"]
+      }
+    },
+    {
+      "name": "estimate_repair_cost",
+      "description": "Estimate cost by hazard type, severity, dimensions, and surface.",
+      "input_schema": { "$ref": "src/schemas/cost_estimate.schema.json" },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "cost_usd": { "type": "number" },
+          "breakdown": { "type": "object" }
+        },
+        "required": ["cost_usd"]
+      }
+    },
+    {
+      "name": "project_severity",
+      "description": "Predict worsening using env + traffic features.",
+      "input_schema": { "$ref": "src/schemas/severity_projection.schema.json" },
+      "output_schema": {
+        "type": "object",
+        "properties": { "projection": { "type": "string" } },
+        "required": ["projection"]
+      }
+    },
+    {
+      "name": "repair_suggestions",
+      "description": "Return concise fix methods and materials + safety notes.",
+      "input_schema": { "$ref": "src/schemas/repair_lookup.schema.json" },
+      "output_schema": {
+        "type": "object",
+        "properties": { "methods": { "type": "array" } },
+        "required": ["methods"]
+      }
+    },
+    {
+      "name": "explain_map",
+      "description": "Explain clusters, hotspots, trends, and recommended actions for ops.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "area": { "type": "string" },
+          "time_window_days": { "type": "integer" }
+        },
+        "required": ["area"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "summary": { "type": "string" },
+          "highlights": { "type": "array" }
+        },
+        "required": ["summary"]
+      }
+    }
+  ]
+}
