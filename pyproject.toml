@@ -1,24 +1,20 @@
 [project]
 name = "hazard-mcp"
-version = "0.1.0"
-description = "MCP server for hazards analytics/repair/projections"
+version = "1.0.0"
+description = "MCP server for serving and querying documentation"
 requires-python = ">=3.10"
 dependencies = [
-  "mcp",
-  "supabase>=2.6.0",
-  "python-dotenv>=1.0.1",
-  "openai",
+    "mcp",
+    "python-dotenv",
+    "openai",
 ]
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-package-dir = { "" = "src" }
-
-[tool.setuptools.packages.find]
-where = ["src"]
+packages = ["src"]
 
 [project.scripts]
-main = "hazard_mcp.main:main"
+main = "src.main:main"
