@@ -18,10 +18,4 @@ build-backend = "setuptools.build_meta"
 packages = ["src"]
 
 [project.scripts]
-hazard-mcp-server = "src.main:main" "" = "src" 
-
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[project.scripts]
-main = "hazard_mcp.main:main"
+hazard-mcp-server = "src.main:main"
