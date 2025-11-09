@@ -44,6 +44,9 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "eslint": "^9.7.0",
     "supabase": "^1.16.1",
     "tsx": "^4.20.3",
     "typescript": "^5.9.2"

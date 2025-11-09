@@ -1,42 +1,25 @@
-# Use official Node.js runtime as base image
-FROM public.ecr.aws/docker/library/node:22-alpine
+# Use the official Bun image as a base
+FROM oven/bun:1
 
-# Set working directory inside container
+# Set the working directory
 WORKDIR /app
 
-# Copy package files first for better caching
-COPY package.json package-lock.json* ./
+# Copy package.json and bun.lockb to leverage Docker layer caching
+# The lockfile is essential for reproducible builds.
+COPY package.json bun.lockb ./
 
-# Install dependencies without running postinstall scripts to avoid build failures
-RUN npm install --ignore-scripts
+# Install dependencies using the frozen lockfile.
+# This ensures the exact same dependencies are used as in your local environment.
+RUN bun install --frozen-lockfile
 
-# Install TypeScript globally for running .ts files directly
-RUN npm install -g typescript ts-node
-
-# Copy source code
+# Copy the rest of the application code
 COPY . .
 
-# Build the TypeScript code - handle gracefully if build fails
-RUN npm run build || echo "Build step failed, but continuing..."
+# Build the TypeScript code into JavaScript
+RUN bun run build
 
-# Create a non-root user for security
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S mcp -u 1001
+# Expose the port that the application will run on
+EXPOSE 3002
 
-# Change ownership of app directory to non-root user
-RUN chown -R mcp:nodejs /app
-
-# Switch to non-root user
-USER mcp
-
-# Set environment variables for Lambda Web Adapter
-ENV NODE_ENV=production
-ENV PORT=8000
-ENV AWS_LAMBDA_EXEC_WRAPPER=/opt/extensions/lambda-adapter
-
-# Expose port 8000 for the MCP server
-EXPOSE 8000
-
-# Command to run the server
-# Use compiled JavaScript for production, with --port flag for HTTP transport
-CMD ["node", "dist/index.js", "--port", "8000"]
+# Set the command to run the application
+CMD ["bun", "run", "start"]
