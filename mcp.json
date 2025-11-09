@@ -10,22 +10,11 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "kind": {
-            "type": "string",
-            "description": "The type of query to run."
-          },
-          "location": {
-            "type": "string",
-            "description": "The location to filter by."
-          },
-          "limit": {
-            "type": "integer",
-            "default": 10
-          }
+          "kind": { "type": "string", "description": "The type of query to run." },
+          "location": { "type": "string", "description": "The location to filter by." },
+          "limit": { "type": "integer", "default": 10 }
         },
-        "required": [
-          "kind"
-        ]
+        "required": ["kind"]
       }
     },
     {
@@ -33,14 +22,8 @@
       "description": "Return a type-aware cost estimate and fully detailed plan for a hazard UUID.",
       "input_schema": {
         "type": "object",
-        "properties": {
-          "hazard_id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "hazard_id"
-        ]
+        "properties": { "hazard_id": { "type": "string" } },
+        "required": ["hazard_id"]
       }
     },
     {
@@ -49,24 +32,11 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "hazard_id": {
-            "type": "string"
-          },
-          "location": {
-            "type": "string"
-          },
-          "horizon_days": {
-            "type": "integer",
-            "default": 30
-          },
-          "precip_mm": {
-            "type": "number",
-            "default": 0.0
-          },
-          "freeze_thaw_cycles": {
-            "type": "integer",
-            "default": 0
-          }
+          "hazard_id": { "type": "string" },
+          "location": { "type": "string" },
+          "horizon_days": { "type": "integer", "default": 30 },
+          "precip_mm": { "type": "number", "default": 0.0 },
+          "freeze_thaw_cycles": { "type": "integer", "default": 0 }
         }
       }
     }
