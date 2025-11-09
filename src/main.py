@@ -167,3 +167,9 @@ def project_worsening(hazard_id: Optional[str] = None, location: Optional[str] =
 
 def main():
     mcp.run()
+
+if __name__ == "__main__":
+    main()
+
+if __name__ == "__main__":
+    main()

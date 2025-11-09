@@ -11,11 +11,14 @@ dependencies = [
 ]
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-package-dir = { "" = "src" }
+packages = ["src"]
+
+[project.scripts]
+hazard-mcp-server = "src.main:main" "" = "src" 
 
 [tool.setuptools.packages.find]
 where = ["src"]
